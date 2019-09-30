@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Starts SBCL running on the Steam runtime listening to Swank connections
+# on port 4005 by default.
+sharedmem=`cat shared-memory-id`
+echo shared-memory-id is $sharedmem
+steam_runtime=/home/selwyn/.steam/ubuntu12_32/steam-runtime/run.sh
+$steam_runtime sbcl --eval "(defparameter *shared-memory-id* ${sharedmem:-0})" --eval '(ql:quickload :swank)' --eval "(swank:create-server :port ${port:-4005} :dont-close t)"

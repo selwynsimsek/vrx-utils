@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# Starts vncviewer so we can see Portacle started in 1-portacle-viewer
+# on the desktop.
+./portacle-virtual
+vncviewer localhost:5900 &
+killall Xvfb
+#./start-swank

@@ -1,0 +1,28 @@
+#!/bin/sh
+
+# Starts a virtual X server, starts Portacle in it, and prints the System V 
+# shared memory ID of the framebuffer to standard output.
+
+int_handler()
+{
+    echo "Interrupted."
+    # Kill the parent process of the script.
+    killall Xvfb
+    exit 1
+}
+trap 'int_handler' INT
+export DISPLAY=:35
+xvfbdir=/var/tmp
+
+killall Xvfb
+sleep 1
+echo before xvfb
+Xvfb $DISPLAY -screen 0 1024x768x16 -shmem 2>&1 | awk '{print $4}' &
+echo after xvfb
+sleep 2
+fluxbox  >/dev/null 2>/dev/null &
+~/portacle/portacle.run  >/dev/null 2>/dev/null &
+x11vnc -display $DISPLAY -bg -forever -nopw -quiet -listen localhost -xkb  >/dev/null 2>/dev/null
+ #give time for x11vnc to start up
+#./start-vncviewer
+#vncviewer localhost:5900
